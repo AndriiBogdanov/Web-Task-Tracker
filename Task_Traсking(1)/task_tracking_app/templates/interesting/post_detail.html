@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ post.title }}</h2>
+  {% if post.image %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:300px; height:auto;">
+  {% endif %}
+  <p>{{ post.content }}</p>
+  <p><small>Автор: {{ post.author }} | Дата: {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
+  
+  <hr>
+  <h4>Коментарі</h4>
+  {% for comment in post.comments.all %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ comment.author }}</h5>
+        <p class="card-text">{{ comment.content }}</p>
+        {% if comment.media %}
+          <img src="{{ comment.media.url }}" alt="Media" style="max-width:200px; height:auto;">
+        {% endif %}
+        <p class="card-text"><small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small></p>
+        <!-- Форма лайка -->
+        <form action="{% url 'tasks:comment-like' comment.pk %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-sm">
+            Like ({{ comment.likes.count }})
+          </button>
+        </form>
+        <!-- Если пользователь является автором комментария -->
+        {% if comment.author == user %}
+          <a href="{% url 'tasks:comment-update' comment.pk %}" class="btn btn-sm btn-secondary">Редагувати</a>
+          <a href="{% url 'tasks:delete_comment' comment.pk %}" class="btn btn-sm btn-danger">Видалити</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>Коментарів ще немає.</p>
+  {% endfor %}
+  
+  <hr>
+  <h4>Залишити коментар</h4>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" class="btn btn-primary">Додати коментар</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{% if object %}Редагувати пост{% else %}Створити новий пост{% endif %}</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">
+      {% if object %}Оновити{% else %}Створити{% endif %}
+    </button>
+    <a href="{% url 'tasks:post-list' %}" class="btn btn-secondary">Назад</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <!-- Заголовок и кнопка добавления задачи -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Список завдань</h2>
+    <a href="{% url 'tasks:task-create' %}" class="btn btn-primary">Додати завдання</a>
+  </div>
+
+  <!-- Форма фильтрации задач -->
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+      {{ form.status.label_tag }}
+    </div>
+    <div class="col-auto">
+      {{ form.status }}
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Фільтрувати</button>
+    </div>
+  </form>
+
+  <!-- Адаптивная сетка карточек -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for task in tasks %}
+      <div class="col animate__animated animate__fadeInUp">
+        <!-- Тёмная карточка с hover-эффектом -->
+        <div class="card h-100 bg-dark text-white border-0 hover-card" style="overflow: hidden;">
+          <!-- Изображение задачи (при наличии) -->
+          {% if task.image %}
+            <img 
+              src="{{ task.image.url }}" 
+              alt="{{ task.title }}" 
+              class="card-img-top"
+              style="object-fit: cover; max-height: 200px;"
+            >
+          {% else %}
+            <!-- Заглушка, если нет картинки -->
+            <div 
+              class="bg-secondary d-flex align-items-center justify-content-center text-white" 
+              style="height: 200px;"
+            >
+              Немає зображення
+            </div>
+          {% endif %}
+          
+          <div class="card-body">
+            <!-- Название задачи -->
+            <h5 class="card-title mb-2">
+              <a 
+                href="{% url 'tasks:task-detail' task.pk %}"
+                class="text-decoration-none text-white fw-bold"
+              >
+                {{ task.title }}
+              </a>
+            </h5>
+            
+            <!-- Бейджи для статуса и приоритета -->
+            <span class="badge bg-primary me-2">{{ task.status }}</span>
+            <span class="badge bg-secondary">{{ task.priority }}</span>
+          </div>
+          
+          <div class="card-footer bg-transparent border-top-0 mt-auto">
+            <form 
+              action="{% url 'tasks:task-complete' task.pk %}" 
+              method="post" 
+              class="mb-0 text-end"
+            >
+              {% csrf_token %}
+              <button 
+                type="submit" 
+                class="btn btn-warning btn-sm"
+              >
+                Помітити як виконано
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>Завдань не знайдено.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

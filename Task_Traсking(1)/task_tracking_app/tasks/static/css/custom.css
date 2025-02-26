@@ -1,0 +1,24 @@
+.nav-link:hover {
+    color: #ffcc00 !important;
+    transition: color 0.3s ease;
+  }
+
+
+  .form-select.custom-dark-select {
+    background-color: #222;  /* Тёмный фон */
+    color: #ccc;            /* Светло-серый текст */
+    border: none;           /* Убираем рамку */
+    border-radius: 6px;     /* Скруглённые углы */
+    transition: background-color 0.3s; /* Плавный переход */
+  }
+  
+  .form-select.custom-dark-select:focus {
+    outline: none;   /* Убираем системную обводку */
+    box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25); /* Полупрозрачная жёлтая подсветка */
+  }
+  
+  .form-select.custom-dark-select option {
+    background-color: #222; /* Чтобы выпадающие пункты тоже были тёмными */
+    color: #ccc;            /* И текст оставался светло-серым */
+  }
+  

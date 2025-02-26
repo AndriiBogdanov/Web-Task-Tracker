@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Система управління завданнями{% endblock title %}</title>
+
+  <!-- Фавикон (из папки media) -->
+  <link rel="icon" href="/media/favicon/favicon.webp" type="image/x-icon">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <!-- Animate.css для анимаций -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+  <!-- Inline стили для гибкой верстки и анимаций -->
+  <style>
+    /* Заполняем всю высоту окна */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    /* Вертикальный flex layout для body */
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Контейнер для основного контента, растягивающийся на всё доступное место */
+    .content-wrapper {
+      flex: 1 0 auto;
+    }
+    /* Футер не сжимается, всегда прижат к низу */
+    footer {
+      flex-shrink: 0;
+      background: linear-gradient(45deg, #333, #000); /* Градиентный фон */
+    }
+    
+    /* Плавный переход для навигационных ссылок */
+    .navbar-brand, .nav-link {
+      transition: color 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #ffcc00 !important;
+    }
+
+    /* Пример hover-эффекта для карточек или блоков */
+    .hover-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 20px rgba(255,255,255,0.2);
+    }
+    
+    /* Оформление и анимация выпадающего меню */
+    .dropdown-menu {
+      background-color: #222;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(204, 204, 204, 0.5);
+      animation-duration: 0.3s; /* Скорость анимации */
+    }
+    /* Когда меню открыто, Bootstrap добавляет .show */
+    .dropdown-menu.show {
+      animation-name: fadeInDown; /* Из Animate.css */
+    }
+    
+    /* Пункты меню: светло-серый текст, 
+       при наведении - фон #333, текст тоже светло-серый */
+    .dropdown-item {
+      color: #ccc;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+      background-color: #333;
+      color: #ccc !important; /* сохраняем светло-серый */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Навбар с анимацией появления (fadeInDown) -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm animate__animated animate__fadeInDown">
+    <div class="container-fluid">
+      <!-- Левая часть: логотип и название -->
+      <div class="d-flex align-items-center">
+        <!-- Логотип (из папки media) -->
+        <img src="/media/favicon/favicon.webp" 
+             alt="Logo" 
+             style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+        
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <a class="navbar-brand dropdown-toggle" 
+             href="#" 
+             id="siteDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false">
+            Trackach
+          </a>
+          <!-- Меню с классом animate__animated -->
+          <ul class="dropdown-menu animate__animated" aria-labelledby="siteDropdown">
+            <li><a class="dropdown-item" href="{% url 'tasks:task-list' %}">Головна</a></li>
+            <li><a class="dropdown-item" href="{% url 'tasks:post-list' %}">Цікаве Інфо</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Кнопка гамбургера для мобильных устройств -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+              aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <!-- Правая часть меню -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'tasks:register' %}">Реєстрація</a>
+          </li>
+          <li class="nav-item">
+            <form class="d-flex" action="{% url 'tasks:logout' %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger ms-2" type="submit">Вихід</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Основной контент с анимацией (fadeIn) -->
+  <div class="content-wrapper">
+    <div class="container mt-4 animate__animated animate__fadeIn">
+      {% block content %}
+      {% endblock content %}
+    </div>
+  </div>
+
+  <!-- Футер с анимацией появления (fadeInUp) -->
+  <footer class="text-white text-center py-3 animate__animated animate__fadeInUp">
+    <div class="container">
+      <p class="mb-0">Trackach 2025®</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle (с Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+/>
+
+</body>
+</html>

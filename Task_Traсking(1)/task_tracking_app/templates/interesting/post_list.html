@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Цікаве Інфо</h2>
+  <a href="{% url 'tasks:post-create' %}" class="btn btn-primary mb-3">Додати пост</a>
+  
+  {% if posts %}
+    <ul class="list-group">
+      {% for post in posts %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ post.title }}</strong>
+            {% if post.image %}
+              <br>
+              <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100px; height:auto;">
+            {% endif %}
+          </div>
+
+          <!-- Правая часть: кнопка «Лайк» + «Переглянути» -->
+          <div>
+            <!-- Форма для лайка -->
+            <form action="{% url 'tasks:post-like' post.pk %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">
+                Like ({{ post.post_likes.count }})
+              </button>
+            </form>
+            <!-- Кнопка «Переглянути» -->
+            <a href="{% url 'tasks:post-detail' post.pk %}" class="btn btn-info btn-sm ms-2">
+              Переглянути
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Нажаль, поки-що немає цікавих постів.</p>
+  {% endif %}
+</div>
+{% endblock %}
